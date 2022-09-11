@@ -2,6 +2,7 @@
 
 import React from 'react';
 import api from '../utils/Api';
+import Card from './Card';
 
 function Content(props) {
   const [userName, setUserName] = React.useState('');
@@ -9,22 +10,23 @@ function Content(props) {
   const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
-  const getUser = api.getUser();
-  const getCards = api.getCards();
-
   React.useEffect(() => {
-    Promise.all([getUser, getCards])
-      .then(([user, cardsList]) => {
+    api
+      .getUser()
+      .then(user => {
         setUserName(user.name);
         setUserDescription(user.about);
         setUserAvatar(user.avatar);
-        setCards([...cards, cardsList]);
-        // console.log(cardsList);
       })
       .catch(err => console.log(err));
+  }, []);
 
-    
-  }, []) 
+  React.useEffect(() => {
+    api
+      .getCards()
+      .then(cardList => setCards(cardList))
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <main className='content'>
@@ -42,7 +44,7 @@ function Content(props) {
               className='edit-button'
               type='button'
               onClick={props.onEditProfile}
-            ></button>
+            />
           </div>
           <p className='profile__subheading'>{userDescription}</p>
         </div>
@@ -52,7 +54,19 @@ function Content(props) {
           onClick={props.onAddPlace}
         />
       </section>
-      <section className='places'></section>
+      <section className='places'>
+        {cards.map(item => {
+          return (
+            <Card
+              key={item._id}
+              _id={item._id}
+              name={item.name}
+              link={item.link}
+              likes={item.likes}
+            />
+          );
+        })}
+      </section>
     </main>
   );
 }

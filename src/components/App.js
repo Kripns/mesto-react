@@ -55,8 +55,8 @@ function App() {
           id='user-name-input'
           type='text'
           placeholder='Имя'
-          minlength='2'
-          maxlength='40'
+          minLength='2'
+          maxLength='40'
           required
         />
         <span className='popup__error user-name-input-error'></span>
@@ -66,8 +66,8 @@ function App() {
           id='user-job-input'
           type='text'
           placeholder='О себе'
-          minlength='2'
-          maxlength='200'
+          minLength='2'
+          maxLength='200'
           required
         />
         <span className='popup__error user-job-input-error'></span>
@@ -84,8 +84,8 @@ function App() {
           id='place-name-input'
           type='text'
           placeholder='Название'
-          minlength='2'
-          maxlength='30'
+          minLength='2'
+          maxLength='30'
           required
         />
         <span className='popup__error place-name-input-error'></span>
@@ -216,7 +216,7 @@ function App() {
           </button>
         </div>
       </div> */}
-      <template className='place-card-template'>
+      {/* <template className='place-card-template'>
         <article className='place-card'>
           <img className='place-card__image' src='#' alt='' />
           <div className='place-card__info'>
@@ -228,7 +228,7 @@ function App() {
             </div>
           </div>
         </article>
-      </template>
+      </template> */}
     </div>
   );
 }
