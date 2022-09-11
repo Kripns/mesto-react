@@ -1,30 +1,21 @@
-// import './Content.css';
-
 import React from 'react';
 import api from '../utils/Api';
 import Card from './Card';
 
-function Content(props) {
+function Main(props) {
   const [userName, setUserName] = React.useState('');
   const [userDescription, setUserDescription] = React.useState('');
   const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api
-      .getUser()
-      .then(user => {
+    Promise.all([api.getUser(), api.getCards()])
+      .then(([user, cardList]) => {
         setUserName(user.name);
         setUserDescription(user.about);
         setUserAvatar(user.avatar);
+        setCards(cardList);
       })
-      .catch(err => console.log(err));
-  }, []);
-
-  React.useEffect(() => {
-    api
-      .getCards()
-      .then(cardList => setCards(cardList))
       .catch(err => console.log(err));
   }, []);
 
@@ -57,13 +48,7 @@ function Content(props) {
       <section className='places'>
         {cards.map(item => {
           return (
-            <Card
-              key={item._id}
-              _id={item._id}
-              name={item.name}
-              link={item.link}
-              likes={item.likes}
-            />
+            <Card key={item._id} card={item} onCardClick={props.onCardClick} />
           );
         })}
       </section>
@@ -71,4 +56,4 @@ function Content(props) {
   );
 }
 
-export default Content;
+export default Main;
