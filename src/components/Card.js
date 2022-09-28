@@ -2,29 +2,31 @@ import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Card(props) {
+  const { card, onCardClick } = props;
   const currentUser = React.useContext(CurrentUserContext);
-  const isOwn = currentUser._id === props.card.owner._id;
+  const isOwn = currentUser._id === card.owner._id;
   const cardRemoveIconClassName = `place-card__remove-icon ${!isOwn ? 'place-card__remove-icon_hidden' : null}`;
-  
+  const isLiked = card.likes.some(i => i._id === currentUser._id);
+  const cardLikeButtonClassName = `place-card__like ${isLiked ? 'place-card__like_active' : null}`;
 
   function handleClick() {
-    props.onCardClick(props.card);
+    onCardClick(card);
   }
 
   return (
     <article className='place-card'>
       <img
         className='place-card__image'
-        src={props.card.link}
-        alt={props.card.name}
+        src={card.link}
+        alt={card.name}
         onClick={handleClick}
       />
       <div className='place-card__info'>
-        <h2 className='place-card__heading'>{props.card.name}</h2>
+        <h2 className='place-card__heading'>{card.name}</h2>
         <button className={cardRemoveIconClassName} type='button' />
         <div className='place-card__likes-wrapper'>
-          <button className='place-card__like' type='button' />
-          <p className='place-card__like-counter'>{props.card.likes.length}</p>
+          <button className={cardLikeButtonClassName} type='button' />
+          <p className='place-card__like-counter'>{card.likes.length}</p>
         </div>
       </div>
     </article>
