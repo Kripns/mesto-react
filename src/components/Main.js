@@ -7,6 +7,20 @@ function Main(props) {
   const [cards, setCards] = React.useState([]);
   const currentUser = React.useContext(CurrentUserContext);
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => currentUser._id === i._id);
+    api.changeLikeCardStatus(card._id, isLiked)
+      .then(updatedCard => {
+        setCards((state) => state.map((c) => c._id === card._id ? updatedCard : c));
+      })
+      .catch(err => console.log(err))  
+  }
+
+  function handleCardDelete() {
+
+  }
+
+
   React.useEffect(() => {
      api.getCards()
       .then(cardList => setCards(cardList))
@@ -44,7 +58,7 @@ function Main(props) {
       <section className='places'>
         {cards.map(item => {
           return (
-            <Card key={item._id} card={item} onCardClick={props.onCardClick} />
+            <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
           );
         })}
       </section>
