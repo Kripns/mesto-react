@@ -2,7 +2,7 @@ import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Card(props) {
-  const { card, onCardClick, onCardLike } = props;
+  const { card, onCardClick, onCardLike, onCardDelete } = props;
   const currentUser = React.useContext(CurrentUserContext);
   const isOwn = currentUser._id === card.owner._id;
   const cardRemoveIconClassName = `place-card__remove-icon ${!isOwn ? 'place-card__remove-icon_hidden' : null}`;
@@ -17,6 +17,10 @@ function Card(props) {
     onCardLike(card)
   }
 
+  function handleDeleteClick() {
+    onCardDelete(card)
+  }
+
   return (
     <article className='place-card'>
       <img
@@ -27,7 +31,7 @@ function Card(props) {
       />
       <div className='place-card__info'>
         <h2 className='place-card__heading'>{card.name}</h2>
-        <button className={cardRemoveIconClassName} type='button' />
+        <button className={cardRemoveIconClassName} type='button' onClick={handleDeleteClick} />
         <div className='place-card__likes-wrapper'>
           <button className={cardLikeButtonClassName} type='button' onClick={handleLikeClick} />
           <p className='place-card__like-counter'>{card.likes.length}</p>

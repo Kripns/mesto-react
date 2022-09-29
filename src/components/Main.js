@@ -16,8 +16,11 @@ function Main(props) {
       .catch(err => console.log(err))  
   }
 
-  function handleCardDelete() {
-
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+      .then(removedCard => {
+        setCards(state => state.filter(item => item._id !==removedCard._id))
+      })
   }
 
 
@@ -58,7 +61,13 @@ function Main(props) {
       <section className='places'>
         {cards.map(item => {
           return (
-            <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
+            <Card
+              key={item._id}
+              card={item}
+              onCardClick={props.onCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
           );
         })}
       </section>
