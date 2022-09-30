@@ -9,28 +9,28 @@ function Main(props) {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => currentUser._id === i._id);
-    api.changeLikeCardStatus(card._id, isLiked)
+    api
+      .changeLikeCardStatus(card._id, isLiked)
       .then(updatedCard => {
-        setCards((state) => state.map((c) => c._id === card._id ? updatedCard : c));
+        setCards(state =>
+          state.map(c => (c._id === card._id ? updatedCard : c))
+        );
       })
-      .catch(err => console.log(err))  
+      .catch(err => console.log(err));
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id)
-      .then(() => {
-        setCards(state => state.filter(item => item._id !== card._id))
-      })
+    api.deleteCard(card._id).then(() => {
+      setCards(state => state.filter(item => item._id !== card._id));
+    });
   }
 
-
   React.useEffect(() => {
-     api.getCards()
+    api
+      .getCards()
       .then(cardList => setCards(cardList))
       .catch(err => console.log(err));
   }, []);
-
-
 
   return (
     <main className='content'>
