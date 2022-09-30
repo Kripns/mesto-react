@@ -18,8 +18,8 @@ function Main(props) {
 
   function handleCardDelete(card) {
     api.deleteCard(card._id)
-      .then(removedCard => {
-        setCards(state => state.filter(item => item._id !==removedCard._id))
+      .then(() => {
+        setCards(state => state.filter(item => item._id !== card._id))
       })
   }
 

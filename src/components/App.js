@@ -3,6 +3,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditPropfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -43,6 +44,15 @@ function App() {
     setIsImagePopupOpen(false);
   }
 
+  function handleUpdateUser(data) {
+    api.editProfile(data)
+      .then(updatedUser => {
+        setCurrentUser(updatedUser);
+        closeAllPopups();
+      })
+      .catch(err => console.log(err));
+  }
+
   React.useEffect(() => {
     api.getUser()
       .then(userInfo => setCurrentUser(userInfo))
@@ -61,10 +71,15 @@ function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
-        <PopupWithForm
+        <EditPropfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        {/* <PopupWithForm
           name='edit-profile'
           title='Редактировать профиль'
-          isOpen={isEditProfilePopupOpen ? 'popup_opened' : ''}
+          isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           defaultButtonText='Сохранить'
         >
@@ -90,7 +105,7 @@ function App() {
             required
           />
           <span className='popup__error user-job-input-error'></span>
-        </PopupWithForm>
+        </PopupWithForm> */}
         <PopupWithForm
           name='card-adding'
           title='Новое место'
