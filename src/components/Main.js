@@ -1,36 +1,18 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import api from '../utils/Api';
 import Card from './Card';
 
 function Main(props) {
-  const [cards, setCards] = React.useState([]);
+  const {
+    onEditProfile,
+    onEditAvatar,
+    onAddPlace,
+    onCardClick,
+    onCardLike,
+    onCardDelete,
+    cards,
+  } = props;
   const currentUser = React.useContext(CurrentUserContext);
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some(i => currentUser._id === i._id);
-    api
-      .changeLikeCardStatus(card._id, isLiked)
-      .then(updatedCard => {
-        setCards(state =>
-          state.map(c => (c._id === card._id ? updatedCard : c))
-        );
-      })
-      .catch(err => console.log(err));
-  }
-
-  function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
-      setCards(state => state.filter(item => item._id !== card._id));
-    });
-  }
-
-  React.useEffect(() => {
-    api
-      .getCards()
-      .then(cardList => setCards(cardList))
-      .catch(err => console.log(err));
-  }, []);
 
   return (
     <main className='content'>
@@ -38,7 +20,7 @@ function Main(props) {
         <button
           className='profile__avatar'
           type='button'
-          onClick={props.onEditAvatar}
+          onClick={onEditAvatar}
           style={{ backgroundImage: `url(${currentUser.avatar})` }}
         />
         <div className='profile__info'>
@@ -47,7 +29,7 @@ function Main(props) {
             <button
               className='edit-button'
               type='button'
-              onClick={props.onEditProfile}
+              onClick={onEditProfile}
             />
           </div>
           <p className='profile__subheading'>{currentUser.about}</p>
@@ -55,7 +37,7 @@ function Main(props) {
         <button
           className='add-card-button'
           type='button'
-          onClick={props.onAddPlace}
+          onClick={onAddPlace}
         />
       </section>
       <section className='places'>
@@ -64,9 +46,9 @@ function Main(props) {
             <Card
               key={item._id}
               card={item}
-              onCardClick={props.onCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+              onCardClick={onCardClick}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
             />
           );
         })}
