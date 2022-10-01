@@ -21,7 +21,12 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
-  //Обработчики открытия и закрытия попапов
+  const isOpen =
+    isAddPlacePopupOpen ||
+    isEditAvatarPopupOpen ||
+    isEditProfilePopupOpen ||
+    isImagePopupOpen;
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -79,9 +84,12 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
-      setCards(state => state.filter(item => item._id !== card._id));
-    });
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards(state => state.filter(item => item._id !== card._id));
+      })
+      .catch(err => console.log(err));
   }
 
   function handleAddPlaceSubmit(data) {
@@ -107,6 +115,21 @@ function App() {
       .then(userInfo => setCurrentUser(userInfo))
       .catch(err => console.log(err));
   }, []);
+
+  React.useEffect(() => {
+    function closeByEscape(e) {
+      if (e.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', closeByEscape);
+      return () => {
+        document.removeEventListener('keydown', closeByEscape);
+      };
+    }
+  }, [isOpen]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -137,14 +160,6 @@ function App() {
           onClose={closeAllPopups}
           onSubmit={handleAddPlaceSubmit}
         />
-
-        {/* <PopupWithForm 
-          name='type_delete'
-          title='Вы уверены?'
-          isOpen
-          onClose={closeAllPopups}
-          defaultButtonText='Да'
-        ></PopupWithForm> */}
         <ImagePopup
           name='image'
           isOpen={isImagePopupOpen ? 'popup_opened' : ''}
