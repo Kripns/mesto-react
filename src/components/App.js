@@ -111,13 +111,13 @@ function App() {
       <div className='App'>
         <Header />
         <Main
+          cards={cards}
           onEditProfile={handleEditProfileClick}
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
-          cards={cards}
         />
         <Footer />
         <EditPropfilePopup
@@ -135,15 +135,6 @@ function App() {
           onClose={closeAllPopups}
           onSubmit={handleAddPlaceSubmit}
         />
-
-        
-        {/* <PopupWithForm 
-          name='type_delete'
-          title='Вы уверены?'
-          isOpen
-          onClose={closeAllPopups}
-          defaultButtonText='Да'
-        ></PopupWithForm> */}
         <ImagePopup
           name='image'
           isOpen={isImagePopupOpen ? 'popup_opened' : ''}

@@ -4,14 +4,15 @@ import Card from './Card';
 
 function Main(props) {
   const {
+    cards,
     onEditProfile,
     onEditAvatar,
     onAddPlace,
     onCardClick,
     onCardLike,
-    onCardDelete,
-    cards,
+    onCardDelete
   } = props;
+  
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
@@ -41,7 +42,8 @@ function Main(props) {
         />
       </section>
       <section className='places'>
-        {cards.map(item => {
+        {
+        cards.map(item => {
           return (
             <Card
               key={item._id}

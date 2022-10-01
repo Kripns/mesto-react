@@ -19,6 +19,11 @@ function AddPlacePopup(props) {
     onSubmit({ name, link })
   }
 
+  React.useEffect(() => {
+    setName('');
+    setLink('');
+  }, [isOpen])
+
   return (
     <PopupWithForm
       name='card-adding'
@@ -30,8 +35,9 @@ function AddPlacePopup(props) {
     >
       <input
         className='popup__input popup__input_type_place-name'
-        name={`${name || ''}`}
+        name={name}
         onChange={handleChangeName}
+        value={`${name || ''}`}
         id='place-name-input'
         type='text'
         placeholder='Название'
@@ -42,8 +48,9 @@ function AddPlacePopup(props) {
       <span className='popup__error place-name-input-error'></span>
       <input
         className='popup__input popup__input_type_url'
-        name={`${link || ''}`}
+        name={link}
         onChange={handleChangeLink}
+        value={`${link || ''}`}
         id='picture-link-input'
         type='url'
         placeholder='Ссылка на картинку'
