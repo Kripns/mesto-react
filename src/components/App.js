@@ -5,6 +5,7 @@ import Footer from './Footer';
 import EditPropfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import ConfirmationPopup from './ConfirmationPopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -16,18 +17,24 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] =
+    React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [cardForRemoving, setCardForRemoving] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  //Проверяем открыт ли хоть один попап
   const isOpen =
     isAddPlacePopupOpen ||
     isEditAvatarPopupOpen ||
     isEditProfilePopupOpen ||
-    isImagePopupOpen;
+    isImagePopupOpen ||
+    isConfirmationPopupOpen;
 
+  //Обработчики открытия попапов
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -40,18 +47,26 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleRemoveCardclick(card) {
+    setCardForRemoving(card);
+    setIsConfirmationPopupOpen(true);
+  }
+
   function handleCardClick(card) {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
   }
 
+  //Обработчик закрытия попапов
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsConfirmationPopupOpen(false);
   }
 
+  //Обработчики сабмитов
   function handleUpdateUser(data) {
     setIsLoading(true);
     api
@@ -88,27 +103,35 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
+  //Обработчик лайков
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => currentUser._id === i._id);
     api
       .changeLikeCardStatus(card._id, isLiked)
       .then(updatedCard => {
-        setCards(state =>
-          state.map(c => (c._id === card._id ? updatedCard : c))
-        );
+        setCards(state => {
+          state.map(c => (c._id === card._id ? updatedCard : c));
+        });
       })
       .catch(err => console.log(err));
   }
 
-  function handleCardDelete(card) {
+  //Обработчик удаления карточки
+  function handleCardDelete() {
+    setIsLoading(true);
     api
-      .deleteCard(card._id)
+      .deleteCard(cardForRemoving._id)
       .then(() => {
-        setCards(state => state.filter(item => item._id !== card._id));
+        setCards(state =>
+          state.filter(item => item._id !== cardForRemoving._id)
+        );
+        closeAllPopups();
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setIsLoading(false));
   }
 
+  //Эффекты
   React.useEffect(() => {
     api
       .getCards()
@@ -149,7 +172,7 @@ function App() {
           onCardClick={handleCardClick}
           cards={cards}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={handleRemoveCardclick}
         />
         <Footer />
         <EditPropfilePopup
@@ -170,9 +193,17 @@ function App() {
           onSubmit={handleAddPlaceSubmit}
           isLoading={isLoading}
         />
+        <ConfirmationPopup
+          name='delete'
+          title='Вы уверены?'
+          isOpen={isConfirmationPopupOpen}
+          onClose={closeAllPopups}
+          onSubmit={handleCardDelete}
+          buttonText={isLoading ? 'Удаление...' : 'Да'}
+        />
         <ImagePopup
           name='image'
-          isOpen={isImagePopupOpen ? 'popup_opened' : ''}
+          isOpen={isImagePopupOpen}
           card={selectedCard}
           onClose={closeAllPopups}
         />
