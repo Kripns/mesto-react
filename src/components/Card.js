@@ -4,12 +4,10 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 function Card(props) {
   const { card, onCardClick, onCardLike, onCardDelete } = props;
   const currentUser = React.useContext(CurrentUserContext);
-
   const isOwn = currentUser._id === card.owner._id;
   const cardRemoveIconClassName = `place-card__remove-icon ${
     !isOwn ? 'place-card__remove-icon_hidden' : null
   }`;
-
   const isLiked = card.likes.some(i => i._id === currentUser._id);
   const cardLikeButtonClassName = `place-card__like ${
     isLiked ? 'place-card__like_active' : null

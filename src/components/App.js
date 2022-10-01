@@ -2,9 +2,9 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
+import PopupWithForm from './PopupWithForm';
 import EditPropfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
-import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -12,14 +12,13 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 function App() {
   //Переменные состояния
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-  React.useState(false);
+    React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-  React.useState(false);
+    React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({})
-  const [cards, setCards] = React.useState([]);
 
   //Обработчики открытия и закрытия попапов
   function handleEditAvatarClick() {
@@ -64,41 +63,6 @@ function App() {
       .catch(err => console.log(err));
   }
 
-  function handleCardLike(card) {
-    const isLiked = card.likes.some(i => currentUser._id === i._id);
-    api
-    .changeLikeCardStatus(card._id, isLiked)
-      .then(updatedCard => {
-        setCards(state => {
-          state.map(c => (c._id === card._id ? updatedCard : c))
-        });
-      })
-      .catch(err => console.log(err));
-  }
-
-  function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
-      setCards(state => state.filter(item => item._id !== card._id));
-    });
-  }
-
-  function handleAddPlaceSubmit(data) {
-    api.saveCard(data)
-      .then(newCard => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch(err => console.log(err));
-  }
-
-  React.useEffect(() => {
-    api
-      .getCards()
-      .then(cardList => setCards(cardList))
-      .catch(err => console.log(err));
-  }, []);
-
-
   React.useEffect(() => {
     api.getUser()
       .then(userInfo => setCurrentUser(userInfo))
@@ -111,13 +75,10 @@ function App() {
       <div className='App'>
         <Header />
         <Main
-          cards={cards}
           onEditProfile={handleEditProfileClick}
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
         />
         <Footer />
         <EditPropfilePopup
@@ -130,11 +91,42 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
-        <AddPlacePopup 
-          isOpen={isAddPlacePopupOpen}
+        <PopupWithForm
+          name='card-adding'
+          title='Новое место'
+          isOpen={isAddPlacePopupOpen ? 'popup_opened' : ''}
           onClose={closeAllPopups}
-          onSubmit={handleAddPlaceSubmit}
-        />
+          defaultButtonText='Создать'
+        >
+          <input
+            className='popup__input popup__input_type_place-name'
+            name='name'
+            id='place-name-input'
+            type='text'
+            placeholder='Название'
+            minLength='2'
+            maxLength='30'
+            required
+          />
+          <span className='popup__error place-name-input-error'></span>
+          <input
+            className='popup__input popup__input_type_url'
+            name='link'
+            id='picture-link-input'
+            type='url'
+            placeholder='Ссылка на картинку'
+            required
+          />
+          <span className='popup__error picture-link-input-error'></span>
+        </PopupWithForm>
+        
+        {/* <PopupWithForm 
+          name='type_delete'
+          title='Вы уверены?'
+          isOpen
+          onClose={closeAllPopups}
+          defaultButtonText='Да'
+        ></PopupWithForm> */}
         <ImagePopup
           name='image'
           isOpen={isImagePopupOpen ? 'popup_opened' : ''}
