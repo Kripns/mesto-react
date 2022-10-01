@@ -3,7 +3,7 @@ import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function EditPropfilePopup(props) {
-  const { isOpen, onClose, onUpdateUser } = props;
+  const { isOpen, onClose, isLoading, onUpdateUser } = props;
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const currentUser = React.useContext(CurrentUserContext);
@@ -36,7 +36,7 @@ function EditPropfilePopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      defaultButtonText='Сохранить'
+      buttonText={`${isLoading ? 'Сохранение...' : 'Сохранить'}`}
     >
       <input
         className='popup__input popup__input_type_name'

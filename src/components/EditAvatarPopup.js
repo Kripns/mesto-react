@@ -2,7 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup(props) {
-  const { isOpen, onClose, onUpdateAvatar } = props;
+  const { isOpen, onClose, isLoading, onUpdateAvatar } = props;
   const inputRef = React.useRef();
 
   function handleSubmit(e) {
@@ -21,7 +21,7 @@ function EditAvatarPopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      defaultButtonText='Сохранить'
+      buttonText={`${isLoading ? 'Сохранение...' : 'Сохранить'}`}
     >
       <input
         className='popup__input popup__input_type_url'

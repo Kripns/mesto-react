@@ -2,7 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup(props) {
-  const { isOpen, onClose, onSubmit } = props;
+  const { isOpen, onClose, isLoading, onSubmit } = props;
   const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
 
@@ -31,7 +31,7 @@ function AddPlacePopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      defaultButtonText='Создать'
+      buttonText={`${isLoading ? 'Сохранение...' : 'Создать'}`}
     >
       <input
         className='popup__input popup__input_type_place-name'
