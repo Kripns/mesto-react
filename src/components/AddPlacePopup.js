@@ -31,7 +31,7 @@ function AddPlacePopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText={`${isLoading ? 'Сохранение...' : 'Создать'}`}
+      buttonText={isLoading? 'Сохранение...' : 'Создать'}
     >
       <input
         className='popup__input popup__input_type_place-name'

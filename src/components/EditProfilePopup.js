@@ -36,7 +36,7 @@ function EditPropfilePopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText={`${isLoading ? 'Сохранение...' : 'Сохранить'}`}
+      buttonText={isLoading? 'Сохранение...' : 'Сохранить'}
     >
       <input
         className='popup__input popup__input_type_name'
