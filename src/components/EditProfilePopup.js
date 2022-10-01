@@ -8,11 +8,11 @@ function EditPropfilePopup(props) {
   const [description, setDescription] = React.useState();
   const currentUser = React.useContext(CurrentUserContext);
 
-  function handleNameChange(e) {
+  function handleChangeName(e) {
     setName(e.target.value);
   }
 
-  function handleDescriptionChange(e) {
+  function handleChangeDescription(e) {
     setDescription(e.target.value);
   }
 
@@ -43,7 +43,7 @@ function EditPropfilePopup(props) {
         name='name'
         id='user-name-input'
         type='text'
-        onChange={handleNameChange}
+        onChange={handleChangeName}
         value={`${name || ''}`}
         placeholder='Имя'
         minLength='2'
@@ -56,7 +56,7 @@ function EditPropfilePopup(props) {
         name='about'
         id='user-job-input'
         type='text'
-        onChange={handleDescriptionChange}
+        onChange={handleChangeDescription}
         value={`${description || ''}`}
         placeholder='О себе'
         minLength='2'
