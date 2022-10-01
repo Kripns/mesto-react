@@ -1,32 +1,20 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { useForm } from '../hooks/useForm';
 
 function EditPropfilePopup(props) {
   const { isOpen, onClose, isLoading, onUpdateUser } = props;
-  const [name, setName] = React.useState('');
-  const [description, setDescription] = React.useState('');
   const currentUser = React.useContext(CurrentUserContext);
-
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
-
-  function handleChangeDescription(e) {
-    setDescription(e.target.value);
-  }
+  const { values, setValues, handleChange } = useForm({});
 
   function handleSubmit(e) {
     e.preventDefault();
-    onUpdateUser({
-      name,
-      about: description,
-    });
+    onUpdateUser(values);
   }
 
   React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
+    setValues({ name: currentUser.name, about: currentUser.about });
   }, [currentUser, isOpen]);
 
   return (
@@ -36,15 +24,15 @@ function EditPropfilePopup(props) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText={isLoading? 'Сохранение...' : 'Сохранить'}
+      buttonText={isLoading ? 'Сохранение...' : 'Сохранить'}
     >
       <input
         className='popup__input popup__input_type_name'
         name='name'
         id='user-name-input'
         type='text'
-        onChange={handleChangeName}
-        value={`${name || ''}`}
+        onChange={handleChange}
+        value={values.name || ''}
         placeholder='Имя'
         minLength='2'
         maxLength='40'
@@ -56,8 +44,8 @@ function EditPropfilePopup(props) {
         name='about'
         id='user-job-input'
         type='text'
-        onChange={handleChangeDescription}
-        value={`${description || ''}`}
+        onChange={handleChange}
+        value={values.about || ''}
         placeholder='О себе'
         minLength='2'
         maxLength='200'

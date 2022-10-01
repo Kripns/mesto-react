@@ -12,7 +12,7 @@ function Main(props) {
     onCardLike,
     onCardDelete,
   } = props;
-  
+
   const currentUser = React.useContext(CurrentUserContext);
 
   return (

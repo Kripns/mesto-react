@@ -28,7 +28,6 @@ function App() {
     isEditProfilePopupOpen ||
     isImagePopupOpen;
 
-
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -109,8 +108,6 @@ function App() {
       })
       .catch(err => console.log(err));
   }
-
-  
 
   React.useEffect(() => {
     api
