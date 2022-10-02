@@ -15,7 +15,7 @@ function EditPropfilePopup(props) {
 
   React.useEffect(() => {
     setValues({ name: currentUser.name, about: currentUser.about });
-  }, [currentUser, isOpen]);
+  }, [currentUser, isOpen, setValues]);
 
   return (
     <PopupWithForm

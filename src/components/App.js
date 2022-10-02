@@ -108,12 +108,10 @@ function App() {
     const isLiked = card.likes.some(i => currentUser._id === i._id);
     api
       .changeLikeCardStatus(card._id, isLiked)
-      .then(updatedCard => {
-        setCards(state => {
-          state.map(c => (c._id === card._id ? updatedCard : c));
-        });
+      .then((newCard) => {
+        setCards(state => state.map((c) => c._id === card._id ? newCard : c));
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   }
 
   //Обработчик удаления карточки
@@ -122,9 +120,7 @@ function App() {
     api
       .deleteCard(cardForRemoving._id)
       .then(() => {
-        setCards(state =>
-          state.filter(item => item._id !== cardForRemoving._id)
-        );
+        setCards(state => state.filter(item => item._id !== cardForRemoving._id));
         closeAllPopups();
       })
       .catch(err => console.log(err))
