@@ -2,4 +2,10 @@
   position: relative;
   color: #000;
   font-size: 0;
+  border-radius: 13px;
+  transition: box-shadow .2s;
+}
+
+.place-card:hover {
+  box-shadow: 3px 3px 6px 0 rgb(93, 186, 202), -3px -3px 6px rgb(117, 233, 156);
 }
